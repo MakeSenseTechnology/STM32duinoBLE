@@ -565,6 +565,10 @@ void HCIClass::handleEventPkt(uint8_t /*plen*/, uint8_t pdata[])
     if(GAP.advertising()) {
       HCI.leSetAdvertiseEnable(0x01);
     }
+
+    //FIXME: reset pending packets on disconnect to avoid a deadlock on poll() when reconnecting
+    // with old stale packets pending. We aught to clear prior HCITransport buffers too.
+    _pendingPkt = 0;
   } else if (eventHdr->evt == EVT_CMD_COMPLETE) {
     struct __attribute__ ((packed)) CmdComplete {
       uint8_t ncmd;
