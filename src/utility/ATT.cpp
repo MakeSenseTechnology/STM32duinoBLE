@@ -256,6 +256,9 @@ void ATTClass::addConnection(uint16_t handle, uint8_t role, uint8_t peerBdaddrTy
   if (_eventHandlers[BLEConnected]) {
     _eventHandlers[BLEConnected](BLEDevice(peerBdaddrType, peerBdaddr));
   }
+  #ifdef CFG_BLE_ENABLE_SET_DATA_LENGTH
+  HCI.hciSetDataLength(handle, CFG_BLE_ENABLE_SET_DATA_LENGTH, 2120);
+  #endif // CFG_BLE_ENABLE_SET_DATA_LENGTH
 }
 
 void ATTClass::handleData(uint16_t connectionHandle, uint8_t dlen, uint8_t data[])
