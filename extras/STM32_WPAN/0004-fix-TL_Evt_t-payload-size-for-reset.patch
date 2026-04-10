@@ -1,7 +1,7 @@
-From a6ae9acf134d326f74ff04818b4e2c643c826b35 Mon Sep 17 00:00:00 2001
+From 8da8c8da4c1f62efc3f49690e8bb42c52c4ffc64 Mon Sep 17 00:00:00 2001
 From: Frederic Pillon <frederic.pillon@st.com>
 Date: Mon, 24 Jul 2023 10:55:20 +0200
-Subject: [PATCH 4/4] fix: TL_Evt_t payload size for reset
+Subject: [PATCH 4/6] fix: TL_Evt_t payload size for reset
 
 Within STM32CubeWB v1.17.0 update TL_Evt_t payload size was reduced.
 This produce a warning -Warray-bounds due to the reset management

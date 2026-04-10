@@ -22,6 +22,10 @@
 
 #include <Arduino.h>
 
+#if __has_include("ble_spi_conf.h")
+  #include "ble_spi_conf.h"
+#endif
+
 class HCITransportInterface {
 public:
   virtual int begin() = 0;
@@ -32,6 +36,12 @@ public:
   virtual int available() = 0;
   virtual int peek() = 0;
   virtual int read() = 0;
+
+  // Some transports require a lock to use available/peek/read
+  // These methods allow to keep the lock while reading an unknown number of bytes
+  // These methods might disable interrupts. Only keep the lock as long as necessary.
+  virtual void lockForRead() {}
+  virtual void unlockForRead() {}
 
   virtual size_t write(const uint8_t* data, size_t length) = 0;
 };

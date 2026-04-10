@@ -329,6 +329,19 @@
 #define CFG_BLE_MAX_TX_POWER            (6)
 
 /**
+* BLE stack Maximum number of created Enhanced ATT bearers to be configured
+* in addition to the number of links
+*     - Range: 0 .. 4
+*/
+#define CFG_BLE_MAX_ADD_EATT_BEARERS    (4)
+
+/**
+* Size of the RAM buffer extra_data_buffer allocated for the extension of Host commands
+*     - Range: 0..500 (at least >250)
+*/
+#define CFG_BLE_EXTRA_DATA_BUFFER_SIZE   (500)
+
+/**
  * BLE Rx model configuration flags to be configured with:
  * - SHCI_C2_BLE_INIT_RX_MODEL_AGC_RSSI_LEGACY
  * - SHCI_C2_BLE_INIT_RX_MODEL_AGC_RSSI_BLOCKER
@@ -687,6 +700,7 @@ typedef enum
   /* USER CODE BEGIN CFG_SCH_Prio_Id_t */
 
   /* USER CODE END CFG_SCH_Prio_Id_t */
+  CFG_SCH_PRIO_NBR
 } CFG_SCH_Prio_Id_t;
 
 /**
