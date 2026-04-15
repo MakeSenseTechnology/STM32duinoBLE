@@ -664,12 +664,11 @@ int HCIClass::sendAclPkt(uint16_t handle, uint8_t cid, uint8_t plen, void* data)
 #endif
 
   size_t written = HCITransport.write(txBuffer, sizeof(aclHdr) + plen);
-  // HCITransport.write returns number of bytes in packet -1 on success
-  if (written == (sizeof(aclHdr) + plen) - 1) {
+  if (written > 0) {
     _pendingPkt++;
     return 0;
   } else {
-    printf("!!!!!!!!!!!! HCI TRANSPORT WRITE FAILED! Wrote %d of %d bytes\n", written, sizeof(aclHdr) + plen);
+    printf("!!!!!!!!!!!! HCI TRANSPORT WRITE FAILED\n");
     return -1;
   }
 }
