@@ -39,7 +39,7 @@ enum AddressType {
 
 class BLELocalDevice {
 public:
-  BLELocalDevice(uint8_t ownBdaddrType = STATIC_RANDOM_ADDR);
+  BLELocalDevice(uint8_t ownBdaddrType = PUBLIC_ADDR);
   virtual ~BLELocalDevice();
 
   virtual int begin();
