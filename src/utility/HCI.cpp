@@ -663,8 +663,8 @@ int HCIClass::sendAclPkt(uint16_t handle, uint8_t cid, uint8_t plen, void* data)
   Serial.println(".");
 #endif
 
-  // Only increment pending packet count if write succeeds
   size_t written = HCITransport.write(txBuffer, sizeof(aclHdr) + plen);
+  // HCITransport.write returns number of bytes in packet -1 on success
   if (written == (sizeof(aclHdr) + plen) - 1) {
     _pendingPkt++;
     return 0;
