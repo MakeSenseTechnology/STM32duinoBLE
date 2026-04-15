@@ -516,6 +516,13 @@ int HCISharedMemTransportClass::read()
     _read_index++;
     if (_read_index == _write_index) {
       /* Reset buffer index */
+#if defined(MONITOR_BT_RX_BUFFER)
+      static uint16_t max_write_index = 0;
+      if (_write_index > max_write_index) {
+        max_write_index = _write_index;
+        printf("!!!!!!!!!!!! NEW BUFFER HIGH WATERMARK: %d bytes (max=%d)\n", max_write_index, BLE_MODULE_SHARED_MEM_BUFFER_SIZE);
+      }
+#endif /*(MONITOR_BT_RX_BUFFER)*/
       _read_index = 0;
       _write_index = 0;
     }

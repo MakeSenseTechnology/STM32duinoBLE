@@ -663,10 +663,14 @@ int HCIClass::sendAclPkt(uint16_t handle, uint8_t cid, uint8_t plen, void* data)
   Serial.println(".");
 #endif
 
-  _pendingPkt++;
-  HCITransport.write(txBuffer, sizeof(aclHdr) + plen);
-
-  return 0;
+  size_t written = HCITransport.write(txBuffer, sizeof(aclHdr) + plen);
+  if (written > 0) {
+    _pendingPkt++;
+    return 0;
+  } else {
+    printf("!!!!!!!!!!!! HCI TRANSPORT WRITE FAILED\n");
+    return -1;
+  }
 }
 
 int HCIClass::disconnect(uint16_t handle)
