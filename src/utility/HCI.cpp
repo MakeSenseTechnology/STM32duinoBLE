@@ -865,13 +865,10 @@ void HCIClass::handleAclDataPkt(uint8_t /*plen*/, uint8_t pdata[])
 
 void HCIClass::handleNumCompPkts(uint16_t /*handle*/, uint16_t numPkts)
 {
-  // Only process if numPkts is valid (non-zero)
-  if (numPkts > 0) {
-    if (_pendingPkt >= numPkts) {
-      _pendingPkt -= numPkts;
-    } else {
-      _pendingPkt = 0;
-    }
+  if (numPkts && _pendingPkt > numPkts) {
+    _pendingPkt -= numPkts;
+  } else {
+    _pendingPkt = 0;
   }
 }
 
