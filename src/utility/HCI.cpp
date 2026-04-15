@@ -299,7 +299,6 @@ int HCIClass::readLeBufferSize(uint16_t& pktLen, uint8_t& maxPkt)
 
     pktLen = leBufferSize->pktLen;
     _maxPkt = maxPkt = leBufferSize->maxPkt;
-    printf("HCI: LE Buffer Size pktLen=%d maxPkt=%d\n", pktLen, maxPkt);
 
 #ifndef __AVR__
     ATT.setMaxMtu(pktLen - 9); // max pkt len - ACL header size
@@ -871,13 +870,9 @@ void HCIClass::handleNumCompPkts(uint16_t /*handle*/, uint16_t numPkts)
     if (_pendingPkt >= numPkts) {
       _pendingPkt -= numPkts;
     } else {
-      // Safety: should not happen, but prevent underflow
-      printf("HCI WARNING: numPkts=%d exceeds pendingPkt=%d, resetting to 0\n", numPkts, _pendingPkt);
       _pendingPkt = 0;
     }
   }
-  // If numPkts == 0, ignore it (possible error condition)
-  printf("HCI: numPkts=%d pendingPkt=%d\n", numPkts, _pendingPkt);
 }
 
 void HCIClass::handleEventPkt(uint8_t /*plen*/, uint8_t pdata[])
@@ -1042,9 +1037,7 @@ void HCIClass::handleEventPkt(uint8_t /*plen*/, uint8_t pdata[])
     uint8_t numHandles = pdata[sizeof(HCIEventHdr)];
     uint16_t* data = (uint16_t*)&pdata[sizeof(HCIEventHdr) + sizeof(numHandles)];
 
-    printf("EVT_NUM_COMP_PKTS received: numHandles=%d\n", numHandles);
     for (uint8_t i = 0; i < numHandles; i++) {
-      printf("  Handle %d: handle=0x%04x, numPkts=%d\n", i, data[0], data[1]);
       handleNumCompPkts(data[0], data[1]);
 #ifdef _BLE_TRACE_
       Serial.print("Outstanding packets: ");
@@ -1054,7 +1047,7 @@ void HCIClass::handleEventPkt(uint8_t /*plen*/, uint8_t pdata[])
       Serial.print("Data[1]: 0x");
       Serial.println(data[1]);
 #endif
-      data += 2;  // Advance to next handle's data
+      data += 2;
     }
   }
   else if(eventHdr->evt == 0x10)

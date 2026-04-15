@@ -237,12 +237,6 @@ void evt_received(TL_EvtPacket_t *hcievt)
           _write_index += len;
         } else {
           data_overflow = true;
-          printf("!!!!!!!!!!!! BLE EVENT BUFFER OVERFLOW! write_index=%d, len=%d, evt=0x%02x\n", 
-                 _write_index, len, hcievt->evtserial.evt.evtcode);
-          // Critical: if this is EVT_NUM_COMP_PKTS (0x13), packet flow control will break!
-          if (hcievt->evtserial.evt.evtcode == 0x13) {
-            printf("!!!!!!!!!!!! CRITICAL: EVT_NUM_COMP_PKTS (0x13) DROPPED! THIS WILL CAUSE PACKET COUNTER ORPHANING!\n");
-          }
         }
         __enable_irq();
       }
@@ -257,8 +251,6 @@ void evt_received(TL_EvtPacket_t *hcievt)
           _write_index += len;
         } else {
           data_overflow = true;
-          printf("!!!!!!!!!!!! BLE ACL DATA BUFFER OVERFLOW! write_index=%d, len=%d\n", 
-                 _write_index, len);
         }
         __enable_irq();
       }
@@ -524,14 +516,13 @@ int HCISharedMemTransportClass::read()
     _read_index++;
     if (_read_index == _write_index) {
       /* Reset buffer index */
-      static uint32_t reset_count = 0;
+#if defined(MONITOR_BT_RX_BUFFER)
       static uint16_t max_write_index = 0;
-      reset_count++;
       if (_write_index > max_write_index) {
         max_write_index = _write_index;
         printf("!!!!!!!!!!!! NEW BUFFER HIGH WATERMARK: %d bytes (max=%d)\n", max_write_index, BLE_MODULE_SHARED_MEM_BUFFER_SIZE);
       }
-      // printf("BLE buffer reset count=%lu, last_write=%d, max_ever=%d\n", reset_count, _write_index, max_write_index);
+#endif /*(MONITOR_BT_RX_BUFFER)*/
       _read_index = 0;
       _write_index = 0;
     }
